@@ -1,0 +1,1 @@
+In most basic way, we need only to define `package.json`, and install all deps through npm or `backbase install` command/tool.

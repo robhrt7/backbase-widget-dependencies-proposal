@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:g="http://www.backbase.com/2008/gadget" xml:lang="en">
+<head>
+    <title>robert-todo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../css/robert-todo.css" />
+</head>
+<body g:onload="requireWidget(__WIDGET__, 'js/robert-todo')" class="rb-robert-todo">
+    <h1 class="rb-robert-todo_title">robert-todo</h1>
+    <h2 class="rb-robert-todo_sub-title">TODOs</h2>
+    <form class="rb-robert-todo_form" data-js="rb-robert-todo_form" action="">
+        <div class="input-group">
+            <input type="text" class="form-control" data-js="rb-robert-todo_input" />
+            <div class="input-group-btn">
+                <button class="rb-robert-todo_form_submit btn btn-default" data-js="rb-robert-todo_submit" type="submit">Add TODO</button>
+            </div>
+        </div>
+    </form>
+    <ul class="rb-robert-todo_list list-group" data-js="rb-robert-todo_list">
+        <!-- Filled dynamically -->
+    </ul>
+</body>
+</html>

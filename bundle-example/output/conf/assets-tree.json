@@ -1,0 +1,11 @@
+{
+  "assets": {
+    "robert-todo": {
+      "css": ['/node_modules/robert-todo/css/robert-todo.css'],
+      "js": [
+        '/node_modules/robert-todo/js/robert-todo.js',
+        '/node_modules/robert-todo/js/modules/inner-dep.js'
+      ]
+    }
+  }
+}

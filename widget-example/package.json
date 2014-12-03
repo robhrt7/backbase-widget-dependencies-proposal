@@ -1,0 +1,14 @@
+{
+  "name": "robert-todo",
+  "version": "0.0.0",
+  "description": "Demo backbase widget",
+  "keywords": [
+    "backbase"
+  ],
+  "maintainers": [
+    "Robert Haritonov <r@rhr.me>"
+  ],
+  "license": "MIT",
+  "dep  endencies": {
+  }
+}

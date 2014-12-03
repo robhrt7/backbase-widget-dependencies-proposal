@@ -1,6 +1,6 @@
 define([
 	'jquery',
-	'bower_components/backbone/backbone',
+	'backbone',
 
     // "widgets/robert-todo" requirejs path is generated during installation
 	'widget/robert-todo/js/modules/inner-dep'

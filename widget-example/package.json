@@ -5,10 +5,11 @@
   "keywords": [
     "backbase"
   ],
+  "main": "js/robert-todo.js",
   "maintainers": [
     "Robert Haritonov <r@rhr.me>"
   ],
   "license": "MIT",
-  "dep  endencies": {
+  "dependencies": {
   }
 }

@@ -1,0 +1,17 @@
+{
+  "name": "backbase-portal",
+  "version": "1.0.0",
+  "description": "Demo Backbase portal with widget dependencies",
+  "keywords": [
+    "backbase"
+  ],
+  "maintainers": [
+    "Robert Haritonov <r@rhr.me>"
+  ],
+  "dependencies": {},
+  "itemDependencies": {
+    "some-bundle": "http://some.url/some/bundle.zip",
+    "retail-widget": "svn+http://package.backbase.com/svn/retail-widget#1.2.3",
+    "widget-robert-todo": "0.1.0"
+  }
+}

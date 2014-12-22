@@ -1,5 +1,14 @@
 {
-  "name": "robert-todo",
+  "name": "widget-robert-todo",
+  "version": "0.1.0",
+  "description": "Demo Backbase widget",
+  "keywords": [
+    "backbase"
+  ],
+  "main": "js/robert-todo.js",
+  "maintainers": [
+    "Robert Haritonov <r@rhr.me>"
+  ],
   "dependencies": {
     "backbone": "~1.1.2",
     "requirejs": "~2.1.15",

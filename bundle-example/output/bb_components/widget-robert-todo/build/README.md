@@ -1,0 +1,1 @@
+Here we will have our `index.html` for Backbase CXP (check `widget-example`).

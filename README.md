@@ -17,6 +17,8 @@ With this proposal, we are following these goals (sorted by priority):
 3. Clean, and standardized source code structure of widgets, bundles and project
 4. Ability to develop and run widgets as standalone, and keep compatibility with non-backbase specialized widgets
 
+Current proposal is not fully compatible with todays Backbase CXP structure, first implementations will have differences in implementation as any transition stages do. In this document, we cover ideal endpoint and flexible core principles.
+
 ## Items structure examples
 
 ### Widget

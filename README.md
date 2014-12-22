@@ -2,10 +2,10 @@
 
 This proposal was originally built for Backbase Customer Experience Platform, but could be used with any types of independent front-end widgets.
 
-All items examples are listed in project sources core:
+Most of structure description is defined in this README file, including install tool (`backbase-cli install`) logic. Plus some item examples (with input/output) are listed in project sources:
 
 1. **widget-example** - example of widget, it's conf, dependencies and generated files
-2. **bundle-example** - example of bundle, that have `widget-example` as a dependency. Output folder contains files generated after `backbase install` command (more info above)
+2. **bundle-example** - example of bundle, that have `widget-example` as a dependency. Output folder contains files generated after `backbase install` command (more info below)
 3. **portal-example** - could be configured the same as `bundle-example`, but only for whole portal scope.
 
 ## The goal
@@ -16,6 +16,93 @@ With this proposal, we are following these goals (sorted by priority):
 2. Easy bundles creation with flexible contents and ease of changing bundle contents
 3. Clean, and standardized source code structure of widgets, bundles and project
 4. Ability to develop and run widgets as standalone, and keep compatibility with non-backbase specialized widgets
+
+## Items structure examples
+
+### Widget
+
+#### Source
+
+```
+backbase-widget
+├─── js
+├─── css
+├─── template.html
+└─── bower.json
+```
+#### Build result
+
+```
+backbase-widget
+├─── js
+├─── css
+├─── template.html
+├─── bower.json
+├─── build
+│    ├── index.html (for Backbase portal)
+│    └── index-dev.html (for standalone development)
+├─── bower_components
+│    ├── backbone
+│    └── jquery...
+```
+
+### Bundle
+
+#### Source
+
+```
+backbase-bundle
+└─── bower.json
+```
+#### Build result
+
+Bundle build in only necessarily for standalone testing. In case, when we initialize project with bundle as a dependency, we will have `bb_components` and `bower_components` only in project root, with all corresponding widgets from different sources.
+
+```
+backbase-bundle
+├─── bower.json
+├─── conf
+│    ├── require-conf.js
+│    └── assets-tree.json
+├─── bb_components
+│    ├── backbase-widget1
+│    ├── backbase-widget2
+│    └── any-other-widget
+├─── bower_components
+│    ├── bundle1-client-dep
+│    ├── backbone
+│    └── jquery...
+```
+
+### Project
+
+#### Source
+
+```
+backbase-project
+├─── bower.json
+└─── other-project-sources...
+```
+#### Build result
+
+```
+backbase-bundle
+├─── bower.json
+├─── other-project-sources...
+├─── conf
+│    ├── require-conf.js
+│    └── assets-tree.json
+├─── bb_components
+│    ├── backbase-widget1
+│    ├── backbase-widget2
+│    ├── project-specific-widget1
+│    └── project-specific-widget2...
+├─── bower_components
+│    ├── bundle1-client-dep
+│    ├── project-client-dep
+│    ├── backbone
+│    └── jquery...
+```
 
 ## Dependencies install tool
 
@@ -62,7 +149,7 @@ backbase-project
 
 Nested dependencies adds great flexibility in terms of bundle packaging, in fact, basic bundle could store only one file, that is `bower.json` with listed widgets and other items as its content.
 
-**You can define eny endpoint for your dependencies - it could be published, public bower package, path to git/svn repository, path to .zip file on the web, or just local path to dependency.**
+**You can define any endpoint for your dependencies - it could be published, public bower package, path to git/svn repository, path to .zip file on the web, or just local path to dependency.**
 
 ### 2. Install all client-side dependencies
 

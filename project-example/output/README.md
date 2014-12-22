@@ -1,4 +1,4 @@
-Listed folders are created during installation with `backbase-cli`:
+Listed folders are created during installation with `backbase-cli install`:
 
 * `bb_components` - item dependencies
 * `bower_components` - all client-side dependencies of bundle itself and all the widgets that it contains

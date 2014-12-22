@@ -1,0 +1,3 @@
+On project level (backbase portal) we define `bower.json`, with all item (widget, bundles, containers etc) and client-side dependencies. In one place, we will have all front-end related dependencies, which after `backbase-cli install` will be all installed in common folder (see `/project-example/otput` folder).
+
+To learn more about install process, check root `README.md` with detailed information about installation process.

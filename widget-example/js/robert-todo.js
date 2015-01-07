@@ -3,7 +3,7 @@ define([
 	'backbone',
 
     // "widgets/robert-todo" requirejs path is generated during installation
-	'widget/robert-todo/js/modules/inner-dep'
+	'robert-todo-bundle/js/modules/inner-dep'
 	], function($, backbone, innerDep) {
 	'use strict';
 

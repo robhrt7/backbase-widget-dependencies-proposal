@@ -1,6 +1,6 @@
 # Proposal for new Backbase widget dependencies structure
 
-This proposal was originally built for Backbase Customer Experience Platform, but could be used with any types of independent front-end widgets.
+This proposal was originally built for [Backbase Customer Experience Platform](http://backbase.com), but could be used with any types of independent front-end widgets.
 
 Most of structure description is defined in this README file, including install tool (`backbase-cli install`) logic. Plus some item examples (with input/output) are listed in project sources:
 
@@ -12,12 +12,10 @@ Most of structure description is defined in this README file, including install 
 
 With this proposal, we are following these goals (sorted by priority):
 
-1. Fast and easy widget and bundles dependency installation (client-side deps and items deps)
-2. Easy bundles creation with flexible contents and ease of changing bundle contents
-3. Clean, and standardized source code structure of widgets, bundles and project
+1. Fast and easy widget and bundles dependency installation (client-side deps and bb components deps)
+2. Easy bundles creation and it's content management
+3. Clean, and standardized source code structure of widgets, bundles and Backbase CXP project it self
 4. Ability to develop and run widgets as standalone, and keep compatibility with non-backbase specialized widgets
-
-Current proposal is not fully compatible with todays Backbase CXP structure, first implementations will have differences in implementation as any transition stages do. In this document, we cover ideal endpoint and flexible core principles.
 
 ## Items structure examples
 
@@ -30,6 +28,7 @@ backbase-widget
 ├─── js
 ├─── css
 ├─── template.html
+├─── import.xml
 └─── bower.json
 ```
 #### Build result
@@ -39,6 +38,7 @@ backbase-widget
 ├─── js
 ├─── css
 ├─── template.html
+├─── import.xml
 ├─── bower.json
 ├─── build
 │    ├── index.html (for Backbase portal)
@@ -58,22 +58,20 @@ backbase-bundle
 ```
 #### Build result
 
-Bundle build in only necessarily for standalone testing. In case, when we initialize project with bundle as a dependency, we will have `bb_components` and `bower_components` only in project root, with all corresponding widgets from different sources.
+Bundle build in only necessarily for standalone testing. In case, when we initialize project with bundle as a dependency, we will have only one components folder (`bower_components`) in project root, with all corresponding widgets from different sources. Nested dependencies like `project>bundle>component` will rearange in flat list after installation.
 
 ```
 backbase-bundle
 ├─── bower.json
-├─── conf
-│    ├── require-conf.js
-│    └── assets-tree.json
-├─── bb_components
+├─── bower_components
 │    ├── backbase-widget1
 │    ├── backbase-widget2
-│    └── any-other-widget
-├─── bower_components
+│    ├── any-other-widget
 │    ├── bundle1-client-dep
 │    ├── backbone
-│    └── jquery...
+│    ├── jquery...
+│    ├── require-bower-conf.js
+│    └── assets-tree.json
 ```
 
 ### Project
@@ -91,19 +89,17 @@ backbase-project
 backbase-bundle
 ├─── bower.json
 ├─── other-project-sources...
-├─── conf
-│    ├── require-conf.js
-│    └── assets-tree.json
-├─── bb_components
+├─── bower_components
 │    ├── backbase-widget1
 │    ├── backbase-widget2
 │    ├── project-specific-widget1
-│    └── project-specific-widget2...
-├─── bower_components
+│    ├── project-specific-widget2
 │    ├── bundle1-client-dep
 │    ├── project-client-dep
 │    ├── backbone
-│    └── jquery...
+│    ├── jquery...
+│    ├── require-bower-conf.js
+│    └── assets-tree.json
 ```
 
 ## Dependencies install tool
@@ -114,35 +110,32 @@ To install portal or bundle dependencies, we would use `backbase-cli` tools, as 
 
 Lets discover more details on how `backbase install` will work:
 
-### 1. Download all item (backbase component) dependencies
+### 1. Download all Backbase component dependencies
 
-For this step, we will use [Bower](http://bower.io/) API to install all **item dependencies** (widgets, containers, client dependency bundles).
+As a package manager, we use [Bower](http://bower.io/) to install all **dependencies** (widgets, containers, client dependency bundles).
 
 Entry point for all item (component) and client-side dependency definition is `bower.json` file, that natively works with Bower package manager, and currently treated as de-facto standard for front-end components.
 
-By default, Bower read `dependencies` field, where client-side dependencies are stored (like jquery, backbone and etc), but in first step, we are using custom field `itemDependencies`. We use custom dependencies field to separate types and download paths.
-
-Bower will parse `bower.json` file, that is stored in your root folder:
+Bower read `dependencies` field, where client-side dependencies are stored (like jquery, backbone and etc) from `bower.json` file, that is stored in your root folder:
 
 ```json
 {
   "name": "backbase-project",
-  "dependencies": {},
-  "itemDependencies": {
+  "dependencies": {
     "some-bundle": "http://some.url/some/bundle.zip",
     "widget-robert-todo": "0.1.0"
   }
 }
 ```
 
-And will download all listed "itemDependencies" to `bb_components` folder in your root. Main difference of Bower package manager from [NPM](https://www.npmjs.org/), is that output of first one is flat tree, when npm outputs nested tree, that is not client-side friendly.
+And will download all listed `"dependencies"` to `bower_components` folder in your root (or any configured place you want). Main difference of Bower package manager from [NPM](https://www.npmjs.org/), is that output of first one is flat tree, when npm outputs nested tree, that is not client-side friendly.
 
 As `some-bundle` is obviously a bundle, it could have other dependencies, like `widget1`, `widget2`, which will be moved to common components folder:
 
 ```
 backbase-project
 ├─── bower.json
-├─── bb_components
+├─── bower_components
 │    ├── widget-robert-todo
 │    ├── some-bundle
 │    ├── widget1
@@ -155,12 +148,12 @@ Nested dependencies adds great flexibility in terms of bundle packaging, in fact
 
 ### 2. Install all client-side dependencies
 
-For installing **client-side dependencies** we use Bower API as well. As our items can (and will) have their own dependencies, we will get multiple `bower.json` file for each item:
+For installing **client-side dependencies** we use Bower as well. As our items can (and will) have their own dependencies, we will get multiple `bower.json` file for each item:
 
 ```
 backbase-project
 ├─── bower.json
-├─── bb_components
+├─── bower_comonents
 │    └── widget-robert-todo
 │        └── bower.json
 │    └── some-bundle
@@ -171,7 +164,7 @@ backbase-project
 │       └── bower.json
 ```
 
-We need to gather all `bower.json` files, that stores our client-side dependencies, and run each after another to install all client-side dependencies in one folder.
+Bower will parse all `bower.json` files, that stores our client-side dependencies, and run each after another to install all client-side dependencies in one folder.
 
 Here's how `bower.json` of widget "widget-robert-todo" contents looks like:
 
@@ -189,7 +182,7 @@ Here's how `bower.json` of widget "widget-robert-todo" contents looks like:
 
 #### Managing same dependencies
 
-Our special script will use native bower API, to run each install, and if during installation, bower will notice same dependencies, it will merge it, and if there will be version conflicts, you will get prompted with options to choose:
+During installation, if bower will notice same dependencies, it will merge it, and if there will be version conflicts, you will get prompted with options to choose:
 
 * Use latest version of dependency
 * Use selected version
@@ -205,19 +198,18 @@ backbase-project
 ├─── bower_components
 │    ├── jquery
 │    ├── requirejs
-│    └── shared
-├─── bb_components
+│    ├── shared
 │    ├── widget-robert-todo
 │    ├── some-bundle
 │    ├── widget1
 │    └── widget2...
 ```
 
-All client-side deps are stored in one place on one level. All items, like widgets, containers and chromes are stored on one level as well, but in different folder `bb_components` (names are open for discussion).
+At the end, all the dependencies are stored in one place with no folder nesting. All items, like widgets, containers and chromes are stored on same level as well, store in `bower_components` folder.
 
 ### 3. Generating RequireJS config
 
-After download of all required dependencies, we automatically generate `require-conf.js`:
+After download of all required dependencies, we automatically generate `require-bower-conf.js`:
 
 ```js
 requirejs.config({
@@ -227,13 +219,13 @@ requirejs.config({
         'backbone': '/static/bower_components/backbone/backbone',
 
         // Paths shorthands, for portal widget path will be different
-        'widget-robert-todo': '/static/bb_components/widget-robert-todo/js/main',
+        'widget-robert-todo': '/static/bower_components/widget-robert-todo/js/main',
         'bower_components': '/static/bower_components'
     }
 });
 ```
 
-This config will provide us short links to dependencies, that we will require from js modules, and will provide namespace for item entry files like `/bb_components/widget-robert-todo/js/main`. Allowing us to call all dependencies with clean paths:
+This config will provide us short links to dependencies, that we will require from js modules (`jquery`, `backbone`, etc), and will provide namespace for item entry files like `/bower_components/widget-robert-todo/js/main`. Allowing us to call all dependencies with clean paths:
 
 ```js
 require([
@@ -243,6 +235,12 @@ require([
     ], function ($, backbone, robertTodo) {
 });
 ```
+
+#### Merging with existing requirejs-conf
+
+If you already have your own, hand crafted `require-conf.js`, you define it in settings for `bb install` and during generation of new one, you will be prompted on conflicts.
+
+ It's recommended to link generated `require-bower-conf.js` after your hand crafted one, and before any `define/require` call.
 
 ### 4. Additional steps (optional)
 
@@ -256,14 +254,22 @@ After installation we will prompt user, and suggest him to import installed item
 
 ## Portal setup
 
-The only specific setup for proposed dependencies structure is path configuration for static server - folders `bb_components`, `bower_components` must be served from `/static`, so all assets will be available by this urls:
+The only specific setup for proposed dependencies structure is path configuration for static server - `bower_components` folder must be served from `/static`, so all assets will be available by this urls:
 
-* `/static/bb_components/widget-robert-todo`
+* `/static/bower_components/widget-robert-todo`
 * `/static/bower_components/jquery`
 
 ### Adding requirejs
 
 Your portal pages must contain link to generated `require-config.js`, or you can bundle all config to one file during build process.
+
+## Developing own components
+
+To develop components, following common way of defining dependencies, we will use another `backbase-cli` tool, called `backbase deploy`. This will deploy your widget from any folder locally, to your Backbase Project, in same `bower_components` folder, where all other dependencies are stored.
+
+You will use `backbase deploy` in cases when you develop your own, new widget, or want to fork other dependencies.
+
+Recommended way of working with individual components, is to store them in own repositories. So if you want to use existing component, but first improving it for your case, you just Fork the original repo. But it will be possible to work only with one Project repository, if you don't need this kid of flexibility.
 
 ## FAQ
 
@@ -277,4 +283,3 @@ As widgets could be developed as standalone, all paths for assets must be relati
 
 * CSS fully supports relative paths, and when you minify all of files to one, it's easy to convert relative paths to absolute (most min tools do that out of the box)
 * assets path on `.html` files are managed by portal, during widget injection
-* TODO: check situation with JS

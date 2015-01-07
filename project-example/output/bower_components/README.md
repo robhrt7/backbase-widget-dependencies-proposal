@@ -1,3 +1,3 @@
-Here will be placed all client-side dependencies of bundle and of all widgets. To see actual contents, check `/widget-example/bower_components` folder.
+All defined widgets as project dependency and client-side dependencies (as jquery and etc) will be downloaded and stored in this folder. If project defines bundle as dependency, all bundle widgets will be listed here as well, in flat tree.
 
 This list of dependencies will be prepared with `backbase install` command/tool, using Bower API. To learn more, check root `README.md` with detailed information about installation process.

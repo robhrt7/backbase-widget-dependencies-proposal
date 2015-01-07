@@ -1,0 +1,1 @@
+Jquery dependency from other components that came to same flat tree after install.

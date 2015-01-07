@@ -1,1 +1,0 @@
-All defined widgets as project dependency will be downloaded and stored in this folder. If project defines bundle as dependency, all bundle widgets will be listed here as well, in flat tree.
